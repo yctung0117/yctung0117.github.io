@@ -92,6 +92,9 @@
                         // 顯示提示訊息並隱藏表單
                         alert("請開啟行動網路再填寫表單");
                         document.getElementById("locationForm").style.display = "none";
+                    } else {
+                        // 檢查是否已經簽到過
+                        checkIfAlreadyCheckedIn();
                     }
                 })
                 .catch(error => console.error("Error fetching IP:", error));
@@ -129,6 +132,14 @@
         }
 
         function submitForm() {
+            const today = new Date().toDateString();
+            const lastCheckInDate = localStorage.getItem('lastCheckInDate');
+
+            if (lastCheckInDate === today) {
+                alert("您已簽到完成。");
+                return;
+            }
+
             // 獲取表單資料
             const name = document.getElementById("name").value;
             const studentID = document.getElementById("studentID").value;
@@ -150,6 +161,8 @@
                 body: formData,
                 mode: "no-cors" // Google 表單不允許 CORS，因此需使用 no-cors
             }).then(() => {
+                // 保存簽到日期
+                localStorage.setItem('lastCheckInDate', today);
                 // 表單提交成功後，顯示 Google Sheet
                 window.location.href = "https://docs.google.com/spreadsheets/d/1tjLJNQYlqeM9UUfhRR_H0FC4zSYyNoBev2mrkfWp9-c/edit?usp=sharing";
             }).catch(error => console.error("Error submitting form:", error));
@@ -157,6 +170,17 @@
 
         function showLocationInstruction() {
             document.getElementById("locationInstruction").style.display = "block";
+        }
+
+        function checkIfAlreadyCheckedIn() {
+            const today = new Date().toDateString();
+            const lastCheckInDate = localStorage.getItem('lastCheckInDate');
+
+            if (lastCheckInDate === today) {
+                // 顯示提示訊息並隱藏表單
+                alert("您已簽到完成。");
+                document.getElementById("locationForm").style.display = "none";
+            }
         }
     </script>
 </head>
@@ -186,35 +210,18 @@
 
     <!-- 資料預覽區塊 -->
     <div id="previewSection" style="display: none;">
-        <h2>請確認以下資料</h2>
+        <h2>預覽</h2>
         <p id="previewName"></p>
         <p id="previewStudentID"></p>
         <p id="previewIP"></p>
-        <button onclick="submitForm()">確認送出</button>
+        <button type="button" onclick="submitForm()">確認並提交</button>
     </div>
 
     <!-- 位置開啟教學 -->
     <div id="locationInstruction">
-        <h2>位置資訊讀取設定說明</h2>
-        <p>如果您的瀏覽器無法讀取位置資訊，請先確認已允許網站存取您的位置資訊。</p>
-        <div>
-            <h3>iPhone</h3>
-            <ol>
-                <li>打開「設定」應用程式。</li>
-                <li>點選「隱私權」。</li>
-                <li>選擇「定位服務」並確保其開啟。</li>
-                <li>找到並選擇此網站，確保定位權限設為「允許」。</li>
-            </ol>
-        </div>
-        <div>
-            <h3>Android</h3>
-            <ol>
-                <li>打開「設定」應用程式。</li>
-                <li>選擇「位置」或「位置服務」。</li>
-                <li>確保位置服務已開啟。</li>
-                <li>找到並選擇此網站，確保定位權限設為「允許」。</li>
-            </ol>
-        </div>
+        <h2>位置開啟教學</h2>
+        <p>請確保您的瀏覽器已開啟地理位置服務，並允許本網站獲取您的位置資訊。</p>
+        <button type="button" onclick="document.getElementById('locationInstruction').style.display = 'none'">關閉</button>
     </div>
 </body>
 </html>
