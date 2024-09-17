@@ -35,7 +35,8 @@
                     document.getElementById("longitude").value = position.coords.longitude;
                     showPreview(); // 顯示預覽視窗
                 }, function (error) {
-                    alert("無法獲取位置：" + error.message);
+                    //alert("無法獲取位置：" + error.message);
+                    alert("請允許瀏覽器取得位置資訊");
                 });
             } else {
                 alert("此瀏覽器不支援地理位置API");
