@@ -52,7 +52,7 @@
             // 在預覽視窗中顯示資料
             document.getElementById("previewName").textContent = "姓名: " + name;
             document.getElementById("previewStudentID").textContent = "學號: " + studentID;
-            document.getElementById("previewLocation").textContent = "位置: 緯度 " + latitude + ", 經度 " + longitude;
+            //document.getElementById("previewLocation").textContent = "位置: 緯度 " + latitude + ", 經度 " + longitude;
             document.getElementById("previewIP").textContent = "IP 位址: " + ipAddress;
 
             // 顯示預覽區塊
@@ -93,8 +93,8 @@
         <h2>預覽填寫資料</h2>
         <p id="previewName"></p>
         <p id="previewStudentID"></p>
-        //<p id="previewLocation"></p>
-        //<p id="previewIP"></p>
+        <p id="previewLocation"></p>
+        <p id="previewIP"></p>
 
         <!-- 最終提交按鈕 -->
         <button type="button" onclick="submitForm()">確認並提交</button>
