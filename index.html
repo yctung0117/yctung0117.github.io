@@ -3,14 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>提交表單</title>
-    <script src="https://apis.google.com/js/api:client.js"></script>
+    <title>Google 登入示例</title>
+    <script src="https://apis.google.com/js/platform.js" async defer></script>
     <script>
-        let ipAddress = "";
         let isLoggedIn = false;
 
         function onSignIn(googleUser) {
-            // Google 登入成功後的回調函數
             const profile = googleUser.getBasicProfile();
             console.log('ID: ' + profile.getId());
             console.log('Name: ' + profile.getName());
@@ -29,11 +27,9 @@
                 gapi.auth2.init({
                     client_id: 'YOUR_CLIENT_ID.apps.googleusercontent.com',
                 }).then(function(auth2) {
-                    // 檢查是否已經登入
                     if (auth2.isSignedIn.get()) {
                         onSignIn(auth2.currentUser.get());
                     } else {
-                        // 顯示登入按鈕
                         auth2.attachClickHandler(document.getElementById('signin-button'), {}, onSignIn, onSignInFailure);
                     }
                 });
@@ -42,24 +38,6 @@
 
         document.addEventListener("DOMContentLoaded", function() {
             loadGoogleAuth();
-
-            // 使用 ipify API 獲取訪問者 IP
-            fetch('https://api.ipify.org?format=json')
-                .then(response => response.json())
-                .then(data => {
-                    console.log("IP 位址:", data.ip);
-                    ipAddress = data.ip;
-                    document.getElementById("visitorIP").value = data.ip;
-
-                    // 檢查 IP 前三碼
-                    const ipPrefix = ipAddress.split('.')[0];
-                    if (ipPrefix === '124') {
-                        // 顯示提示訊息並隱藏表單
-                        alert("請開啟行動網路再填寫表單");
-                        document.getElementById("formSection").style.display = "none";
-                    }
-                })
-                .catch(error => console.error("Error fetching IP:", error));
         });
 
         function getLocationAndPreview() {
@@ -67,7 +45,7 @@
                 navigator.geolocation.getCurrentPosition(function (position) {
                     document.getElementById("latitude").value = position.coords.latitude;
                     document.getElementById("longitude").value = position.coords.longitude;
-                    showPreview(); // 顯示預覽視窗
+                    showPreview();
                 }, function (error) {
                     alert("無法獲取位置：" + error.message);
                 });
@@ -81,19 +59,14 @@
                 alert("請先登入 Google 帳戶");
                 return;
             }
-            // 獲取填寫的姓名、學號和地理位置
             const name = document.getElementById("name").value;
             const studentID = document.getElementById("studentID").value;
             const latitude = document.getElementById("latitude").value;
             const longitude = document.getElementById("longitude").value;
 
-            // 在預覽視窗中顯示資料
             document.getElementById("previewName").textContent = "姓名: " + name;
             document.getElementById("previewStudentID").textContent = "學號: " + studentID;
             document.getElementById("previewLocation").textContent = "位置: 緯度 " + latitude + ", 經度 " + longitude;
-            document.getElementById("previewIP").textContent = "IP 位址: " + ipAddress;
-
-            // 顯示預覽區塊
             document.getElementById("previewSection").style.display = "block";
         }
 
@@ -110,7 +83,7 @@
     <!-- Google 登入區塊 -->
     <div id="loginSection">
         <h1>請登入 Google 帳戶</h1>
-        <button id="signin-button">使用 Google 登入</button>
+        <div class="g-signin2" data-onsuccess="onSignIn" data-theme="dark"></div>
     </div>
 
     <!-- 表單區塊 -->
@@ -131,9 +104,6 @@
             <input type="hidden" id="latitude" name="entry.LATITUDE_ENTRY_ID">
             <input type="hidden" id="longitude" name="entry.LONGITUDE_ENTRY_ID">
             
-            <!-- 隱藏欄位，用來傳送 IP 位址 -->
-            <input type="hidden" id="visitorIP" name="entry.IP_ENTRY_ID">
-            
             <!-- 提交按鈕，首先預覽 -->
             <button type="button" onclick="getLocationAndPreview()">預覽資料</button>
         </form>
@@ -144,7 +114,6 @@
             <p id="previewName"></p>
             <p id="previewStudentID"></p>
             <p id="previewLocation"></p>
-            <p id="previewIP"></p>
 
             <!-- 最終提交按鈕 -->
             <button type="button" onclick="submitForm()">確認並提交</button>
