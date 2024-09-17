@@ -6,7 +6,6 @@
     <title>提交表單</title>
     <script>
         let ipAddress = "";
-        let isMobileNetwork = false;
 
         document.addEventListener("DOMContentLoaded", function() {
             // 使用 ipify API 獲取訪問者 IP
@@ -18,27 +17,6 @@
                     document.getElementById("visitorIP").value = data.ip; // 將 IP 加入隱藏的輸入欄位
                 })
                 .catch(error => console.error("Error fetching IP:", error));
-            
-            // 檢查網絡類型
-            if (navigator.connection) {
-                const connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
-                if (connection) {
-                    isMobileNetwork = connection.type === 'cellular';
-                } else {
-                    alert("無法檢測網絡類型，請確保使用行動網路");
-                    document.getElementById("locationForm").style.display = "none";
-                    return;
-                }
-            } else {
-                alert("瀏覽器不支援網絡檢測");
-                document.getElementById("locationForm").style.display = "none";
-                return;
-            }
-
-            if (!isMobileNetwork) {
-                alert("請使用行動網路填寫此表單。");
-                document.getElementById("locationForm").style.display = "none";
-            }
         });
 
         function getLocationAndPreview() {
