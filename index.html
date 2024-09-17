@@ -60,7 +60,7 @@
         #previewSection p {
             margin: 10px 0;
         }
-        #locationHelp, #locationInstruction {
+        #locationInstruction {
             max-width: 600px;
             margin: 20px auto;
             padding: 20px;
@@ -69,7 +69,7 @@
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             display: none;
         }
-        #locationHelp h2, #locationInstruction h2 {
+        #locationInstruction h2 {
             margin-top: 0;
         }
     </style>
@@ -136,7 +136,7 @@
             const lastCheckInDate = localStorage.getItem('lastCheckInDate');
 
             if (lastCheckInDate === today) {
-                alert("您已簽到完成。");
+                alert("您已簽到完成。請明天再試。");
                 return;
             }
 
@@ -178,7 +178,7 @@
 
             if (lastCheckInDate === today) {
                 // 顯示提示訊息並隱藏表單
-                alert("您已簽到完成。");
+                alert("您已簽到完成。請明天再試。");
                 document.getElementById("locationForm").style.display = "none";
             }
         }
