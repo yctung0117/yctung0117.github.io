@@ -60,6 +60,18 @@
         #previewSection p {
             margin: 10px 0;
         }
+        #locationHelp {
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 20px;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            display: none;
+        }
+        #locationHelp h2 {
+            margin-top: 0;
+        }
     </style>
     <script>
         let ipAddress = "";
@@ -92,7 +104,8 @@
                     document.getElementById("longitude").value = position.coords.longitude;
                     showPreview(); // 顯示預覽視窗
                 }, function (error) {
-                    alert("無法獲取位置：" + error.message);
+                    // 顯示位置開啟教學
+                    showLocationHelp();
                 });
             } else {
                 alert("此瀏覽器不支援地理位置API");
@@ -144,6 +157,10 @@
                 document.getElementById("previewSection").style.display = "none";
             });
         }
+
+        function showLocationHelp() {
+            document.getElementById("locationHelp").style.display = "block";
+        }
     </script>
 </head>
 <body>
@@ -179,6 +196,25 @@
 
         <!-- 最終提交按鈕 -->
         <button type="button" onclick="submitForm()">確認並提交</button>
+    </div>
+
+    <!-- 位置開啟教學 -->
+    <div id="locationHelp">
+        <h2>如何啟用位置資訊</h2>
+        <p><strong>iPhone:</strong></p>
+        <ul>
+            <li>打開「設定」應用程式。</li>
+            <li>選擇「隱私權」或「Privacy」。</li>
+            <li>點擊「定位服務」或「Location Services」，並確保它是開啟的。</li>
+            <li>找到「瀏覽器」應用程式（例如 Safari），確保它的定位服務也已開啟。</li>
+        </ul>
+        <p><strong>Android:</strong></p>
+        <ul>
+            <li>打開「設定」應用程式。</li>
+            <li>選擇「位置」或「Location」。</li>
+            <li>確保「使用位置」或「Use Location」是開啟的。</li>
+            <li>在「應用程式」列表中，找到並選擇你的瀏覽器，確保其位置權限已開啟。</li>
+        </ul>
     </div>
 </body>
 </html>
