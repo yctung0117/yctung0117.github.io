@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>取得手機座標1</title>
+    <title>提交表單</title>
     <style>
         #previewModal {
-            display: none; /* 隱藏預覽對話框 */
+            display: none;
             position: fixed;
             top: 0;
             left: 0;
@@ -22,12 +22,28 @@
             border-radius: 5px;
             text-align: center;
         }
+        #submissionMessage {
+            display: none;
+            text-align: center;
+            color: red;
+        }
     </style>
     <script>
+        function checkSubmissionStatus() {
+            // 檢查 localStorage 中是否已有提交標記
+            if (localStorage.getItem('formSubmitted') === 'true') {
+                document.getElementById('submissionMessage').style.display = 'block';
+                document.getElementById('locationForm').style.display = 'none';
+            } else {
+                document.getElementById('submissionMessage').style.display = 'none';
+                document.getElementById('locationForm').style.display = 'block';
+            }
+        }
+
         function getLocationAndSubmit() {
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(function (position) {
-                    // 將經緯度填入Google表單欄位
+                    // 填入 Google 表單的隱藏欄位
                     document.getElementById("latitude").value = position.coords.latitude;
                     document.getElementById("longitude").value = position.coords.longitude;
 
@@ -63,7 +79,8 @@
         }
 
         function confirmSubmit() {
-            // 提交表單
+            // 標記已提交並提交表單
+            localStorage.setItem('formSubmitted', 'true');
             document.getElementById("locationForm").submit();
         }
 
@@ -73,27 +90,31 @@
         }
     </script>
 </head>
-<body>
+<body onload="checkSubmissionStatus()">
     <h1>請允許我們存取您的位置</h1>
 
-    <form id="locationForm" action="https://docs.google.com/forms/d/e/FORM_ID/formResponse" method="POST" target="_self">
+    <!-- 提交已經完成的訊息 -->
+    <div id="submissionMessage">
+        <h2>您已經提交過此表單。</h2>
+        <p>感謝您的參與！</p>
+    </div>
+
+    <!-- Google 表單 -->
+    <form id="locationForm" action="https://docs.google.com/forms/d/e/1FAIpQLSehVc7iQcX2NsE-lFzb9u8KuiLIgT5cZ5UF-Rir_PPa4yie3w/formResponse" method="POST" target="_self">
         <!-- 姓名欄位 -->
         <label for="name">姓名:</label>
-        <input type="text" id="name" name="entry.NAME_ENTRY_ID" required>
+        <input type="text" id="name" name="entry.263219938" required>
         
         <!-- 學號欄位 -->
         <label for="studentID">學號:</label>
-        <input type="text" id="studentID" name="entry.STUDENT_ID_ENTRY_ID" required>
+        <input type="text" id="studentID" name="entry.426531116" required>
         
-        <!-- 隱藏欄位，將座標傳送到Google表單對應的entry ID -->
-        <input type="hidden" id="latitude" name="entry.LATITUDE_ENTRY_ID">
-        <input type="hidden" id="longitude" name="entry.LONGITUDE_ENTRY_ID">
+        <!-- 隱藏欄位，將座標傳送到 Google 表單對應的 entry ID -->
+        <input type="hidden" id="latitude" name="entry.1430317296">
+        <input type="hidden" id="longitude" name="entry.1940075456">
         
         <!-- 預覽按鈕 -->
         <button type="button" onclick="getLocationAndSubmit()">預覽填入信息</button>
-        
-        <!-- 提交按鈕（禁用直到預覽確認） -->
-        <button type="button" onclick="getLocationAndSubmit()">傳送座標</button>
     </form>
 
     <!-- 預覽對話框 -->
