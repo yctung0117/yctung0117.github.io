@@ -52,7 +52,6 @@
             // 在預覽視窗中顯示資料
             document.getElementById("previewName").textContent = "姓名: " + name;
             document.getElementById("previewStudentID").textContent = "學號: " + studentID;
-            //document.getElementById("previewLocation").textContent = "位置: 緯度 " + latitude + ", 經度 " + longitude;
             document.getElementById("previewIP").textContent = "IP 位址: " + ipAddress;
 
             // 顯示預覽區塊
@@ -60,7 +59,35 @@
         }
 
         function submitForm() {
-            document.getElementById("locationForm").submit();
+            // 獲取表單資料
+            const name = document.getElementById("name").value;
+            const studentID = document.getElementById("studentID").value;
+            const latitude = document.getElementById("latitude").value;
+            const longitude = document.getElementById("longitude").value;
+            const ip = document.getElementById("visitorIP").value;
+
+            // 創建表單數據物件
+            const formData = new FormData();
+            formData.append("entry.263219938", name); // 替換為你的 entry ID
+            formData.append("entry.426531116", studentID); // 替換為你的 entry ID
+            formData.append("entry.1430317296", latitude); // 替換為你的 entry ID
+            formData.append("entry.1940075456", longitude); // 替換為你的 entry ID
+            formData.append("entry.1775260235", ip); // 替換為你的 entry ID
+
+            // 使用 fetch API 後端傳送資料到 Google 表單
+            fetch("https://docs.google.com/forms/d/e/1FAIpQLSehVc7iQcX2NsE-lFzb9u8KuiLIgT5cZ5UF-Rir_PPa4yie3w/formResponse", {
+                method: "POST",
+                body: formData,
+                mode: "no-cors" // Google 表單不允許 CORS，因此需使用 no-cors
+            }).then(() => {
+                alert("表單已成功送出！");
+                // 清空表單
+                document.getElementById("attendanceForm").reset();
+                document.getElementById("previewSection").style.display = "none";
+            }).catch((error) => {
+                console.error("提交錯誤:", error);
+                alert("提交失敗，請稍後重試。");
+            });
         }
     </script>
 </head>
@@ -68,7 +95,7 @@
     <h1>請允許我們存取您的位置</h1>
 
     <!-- Google 表單 -->
-    <form id="locationForm" action="https://docs.google.com/forms/d/e/1FAIpQLSehVc7iQcX2NsE-lFzb9u8KuiLIgT5cZ5UF-Rir_PPa4yie3w/formResponse" method="POST" target="_self">
+    <form id="locationForm" onsubmit="event.preventDefault(); submitForm();">
         <!-- 姓名欄位 -->
         <label for="name">姓名:</label>
         <input type="text" id="name" name="entry.263219938" required>
@@ -93,7 +120,6 @@
         <h2>預覽填寫資料</h2>
         <p id="previewName"></p>
         <p id="previewStudentID"></p>
-        <p id="previewLocation"></p>
         <p id="previewIP"></p>
 
         <!-- 最終提交按鈕 -->
