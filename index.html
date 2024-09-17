@@ -43,18 +43,18 @@
         <h1>請允許我們存取您的位置</h1>
 
         <!-- Google 表單 -->
-        <form id="locationForm" action="https://docs.google.com/forms/d/e/FORM_ID/formResponse" method="POST" target="_self">
+        <form id="locationForm" action="https://docs.google.com/forms/d/e/1FAIpQLSehVc7iQcX2NsE-lFzb9u8KuiLIgT5cZ5UF-Rir_PPa4yie3w/formResponse" method="POST" target="_self">
             <!-- 姓名欄位 -->
             <label for="name">姓名:</label>
-            <input type="text" id="name" name="entry.NAME_ENTRY_ID" required>
+            <input type="text" id="name" name="entry.263219938" required>
             
             <!-- 學號欄位 -->
             <label for="studentID">學號:</label>
-            <input type="text" id="studentID" name="entry.STUDENT_ID_ENTRY_ID" required>
+            <input type="text" id="studentID" name="entry.426531116" required>
             
             <!-- 隱藏欄位，將座標傳送到 Google 表單對應的 entry ID -->
-            <input type="hidden" id="latitude" name="entry.LATITUDE_ENTRY_ID">
-            <input type="hidden" id="longitude" name="entry.LONGITUDE_ENTRY_ID">
+            <input type="hidden" id="latitude" name="entry.1430317296">
+            <input type="hidden" id="longitude" name="entry.1940075456">
             
             <!-- 提交按鈕，首先預覽 -->
             <button type="button" onclick="getLocationAndPreview()">預覽資料</button>
