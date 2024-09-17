@@ -22,32 +22,13 @@
             border-radius: 5px;
             text-align: center;
         }
-        #submissionMessage {
-            display: none;
-            text-align: center;
-            color: red;
-        }
     </style>
     <script>
-        function checkSubmissionStatus() {
-            // 檢查 localStorage 中是否已有提交標記
-            if (localStorage.getItem('formSubmitted') === 'true') {
-                document.getElementById('submissionMessage').style.display = 'block';
-                document.getElementById('locationForm').style.display = 'none';
-            } else {
-                document.getElementById('submissionMessage').style.display = 'none';
-                document.getElementById('locationForm').style.display = 'block';
-            }
-        }
-
         function getLocationAndSubmit() {
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(function (position) {
-                    // 填入 Google 表單的隱藏欄位
                     document.getElementById("latitude").value = position.coords.latitude;
                     document.getElementById("longitude").value = position.coords.longitude;
-
-                    // 顯示預覽對話框
                     showPreview();
                 }, function (error) {
                     alert("無法獲取位置：" + error.message);
@@ -58,46 +39,33 @@
         }
 
         function showPreview() {
-            // 獲取用戶輸入的數據
             var name = document.getElementById("name").value;
             var studentID = document.getElementById("studentID").value;
             var latitude = document.getElementById("latitude").value;
             var longitude = document.getElementById("longitude").value;
 
-            // 顯示預覽信息
             document.getElementById("previewName").textContent = "姓名: " + name;
             document.getElementById("previewStudentID").textContent = "學號: " + studentID;
             document.getElementById("previewLatitude").textContent = "緯度: " + latitude;
             document.getElementById("previewLongitude").textContent = "經度: " + longitude;
 
-            // 隱藏座標的輸入框，顯示座標值
             document.getElementById("latitude").style.display = "none";
             document.getElementById("longitude").style.display = "none";
 
-            // 顯示預覽對話框
             document.getElementById("previewModal").style.display = "flex";
         }
 
         function confirmSubmit() {
-            // 標記已提交並提交表單
-            localStorage.setItem('formSubmitted', 'true');
             document.getElementById("locationForm").submit();
         }
 
         function closePreview() {
-            // 關閉預覽對話框
             document.getElementById("previewModal").style.display = "none";
         }
     </script>
 </head>
-<body onload="checkSubmissionStatus()">
+<body>
     <h1>請允許我們存取您的位置</h1>
-
-    <!-- 提交已經完成的訊息 -->
-    <div id="submissionMessage">
-        <h2>您已經提交過此表單。</h2>
-        <p>感謝您的參與！</p>
-    </div>
 
     <!-- Google 表單 -->
     <form id="locationForm" action="https://docs.google.com/forms/d/e/1FAIpQLSehVc7iQcX2NsE-lFzb9u8KuiLIgT5cZ5UF-Rir_PPa4yie3w/formResponse" method="POST" target="_self">
