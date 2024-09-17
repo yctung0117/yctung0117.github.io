@@ -73,10 +73,8 @@
             margin-top: 0;
         }
     </style>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/fingerprintjs/3.3.0/fingerprint.min.js"></script>
     <script>
         let ipAddress = "";
-        let fingerprint = "";
 
         document.addEventListener("DOMContentLoaded", function() {
             // 使用 ipify API 獲取訪問者 IP
@@ -97,16 +95,6 @@
                     }
                 })
                 .catch(error => console.error("Error fetching IP:", error));
-
-            // 獲取瀏覽器指紋
-            FingerprintJS.load().then(fp => {
-                fp.get().then(result => {
-                    fingerprint = result.visitorId;
-                    console.log("瀏覽器指紋:", fingerprint);
-                    // 將指紋數據加入隱藏的輸入欄位
-                    document.getElementById("fingerprint").value = fingerprint;
-                }).catch(error => console.error("Error getting fingerprint:", error));
-            }).catch(error => console.error("Error loading FingerprintJS:", error));
         });
 
         function getLocationAndPreview() {
@@ -147,7 +135,6 @@
             const latitude = document.getElementById("latitude").value;
             const longitude = document.getElementById("longitude").value;
             const ip = document.getElementById("visitorIP").value;
-            const fingerprintId = document.getElementById("fingerprint").value;
 
             // 創建表單數據物件
             const formData = new FormData();
@@ -156,7 +143,6 @@
             formData.append("entry.1497304119", latitude); // 替換為你的 entry ID
             formData.append("entry.417639613", longitude); // 替換為你的 entry ID
             formData.append("entry.1508641572", ip); // 替換為你的 entry ID
-            formData.append("entry.1240129849", fingerprintId); // 替換為你的 entry ID
 
             // 使用 fetch API 後端傳送資料到 Google 表單
             fetch("https://docs.google.com/forms/d/e/1FAIpQLSc74R69hMP9lUghdAj4_zyVUhcl1n3Z9CUsYnD24dK3M607Wg/formResponse", {
@@ -197,8 +183,7 @@
         <!-- 隱藏欄位，用來傳送 IP 位址 -->
         <input type="hidden" id="visitorIP" name="entry.1508641572">
 
-        <!-- 隱藏欄位，用來傳送瀏覽器指紋 -->
-        <input type="hidden" id="fingerprint" name="entry.1240129849">
+        <!-- 去除瀏覽器指紋欄位 -->
         
         <!-- 提交按鈕，首先預覽 -->
         <button type="button" onclick="getLocationAndPreview()">預覽資料</button>
@@ -222,19 +207,4 @@
             <ol>
                 <li>打開「設定」應用程式。</li>
                 <li>點選「隱私權」。</li>
-                <li>選擇「定位服務」並確保其開啟。</li>
-                <li>在列表中找到您的瀏覽器，並確保其位置權限設為「使用期間」或「始終」。</li>
-            </ol>
-        </div>
-        <div>
-            <h3>Android</h3>
-            <ol>
-                <li>打開「設定」應用程式。</li>
-                <li>選擇「位置」或「位置資訊」。</li>
-                <li>確保「位置」功能已啟用。</li>
-                <li>在「應用程式」列表中找到您的瀏覽器，並確認其位置權限設為「允許」或「總是允許」。</li>
-            </ol>
-        </div>
-    </div>
-</body>
-</html>
+                <li>選擇「定位服務」並確保其開啟
