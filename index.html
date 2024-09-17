@@ -150,11 +150,8 @@
                 body: formData,
                 mode: "no-cors" // Google 表單不允許 CORS，因此需使用 no-cors
             }).then(() => {
-                // 假設表單提交成功
-                alert("表單已成功送出！");
-                // 清空表單
-                document.getElementById("locationForm").reset();
-                document.getElementById("previewSection").style.display = "none";
+                // 表單提交成功後，顯示 Google Sheet
+                window.location.href = "https://docs.google.com/spreadsheets/d/1tjLJNQYlqeM9UUfhRR_H0FC4zSYyNoBev2mrkfWp9-c/edit?usp=sharing";
             }).catch(error => console.error("Error submitting form:", error));
         }
 
@@ -183,8 +180,6 @@
         <!-- 隱藏欄位，用來傳送 IP 位址 -->
         <input type="hidden" id="visitorIP" name="entry.1508641572">
 
-        <!-- 去除瀏覽器指紋欄位 -->
-        
         <!-- 提交按鈕，首先預覽 -->
         <button type="button" onclick="getLocationAndPreview()">預覽資料</button>
     </form>
@@ -207,4 +202,19 @@
             <ol>
                 <li>打開「設定」應用程式。</li>
                 <li>點選「隱私權」。</li>
-                <li>選擇「定位服務」並確保其開啟
+                <li>選擇「定位服務」並確保其開啟。</li>
+                <li>找到並選擇此網站，確保定位權限設為「允許」。</li>
+            </ol>
+        </div>
+        <div>
+            <h3>Android</h3>
+            <ol>
+                <li>打開「設定」應用程式。</li>
+                <li>選擇「位置」或「位置服務」。</li>
+                <li>確保位置服務已開啟。</li>
+                <li>找到並選擇此網站，確保定位權限設為「允許」。</li>
+            </ol>
+        </div>
+    </div>
+</body>
+</html>
