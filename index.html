@@ -3,43 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Google 登入示例</title>
+    <title>表單填寫示例</title>
     <script src="https://apis.google.com/js/platform.js" async defer></script>
     <script>
-        let isLoggedIn = false;
-
-        function onSignIn(googleUser) {
-            const profile = googleUser.getBasicProfile();
-            console.log('ID: ' + profile.getId());
-            console.log('Name: ' + profile.getName());
-            console.log('Email: ' + profile.getEmail());
-            isLoggedIn = true;
-            document.getElementById("loginSection").style.display = "none";
-            document.getElementById("formSection").style.display = "block";
-        }
-
-        function onSignInFailure(error) {
-            console.error("Google 登入失敗:", error);
-        }
-
-        function loadGoogleAuth() {
-            gapi.load('auth2', function() {
-                gapi.auth2.init({
-                    client_id: 'YOUR_CLIENT_ID.apps.googleusercontent.com',
-                }).then(function(auth2) {
-                    if (auth2.isSignedIn.get()) {
-                        onSignIn(auth2.currentUser.get());
-                    } else {
-                        auth2.attachClickHandler(document.getElementById('signin-button'), {}, onSignIn, onSignInFailure);
-                    }
-                });
-            });
-        }
-
-        document.addEventListener("DOMContentLoaded", function() {
-            loadGoogleAuth();
-        });
-
         function getLocationAndPreview() {
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(function (position) {
@@ -55,10 +21,6 @@
         }
 
         function showPreview() {
-            if (!isLoggedIn) {
-                alert("請先登入 Google 帳戶");
-                return;
-            }
             const name = document.getElementById("name").value;
             const studentID = document.getElementById("studentID").value;
             const latitude = document.getElementById("latitude").value;
@@ -71,23 +33,13 @@
         }
 
         function submitForm() {
-            if (!isLoggedIn) {
-                alert("請先登入 Google 帳戶");
-                return;
-            }
             document.getElementById("locationForm").submit();
         }
     </script>
 </head>
 <body>
-    <!-- Google 登入區塊 -->
-    <div id="loginSection">
-        <h1>請登入 Google 帳戶</h1>
-        <div class="g-signin2" data-onsuccess="onSignIn" data-theme="dark"></div>
-    </div>
-
     <!-- 表單區塊 -->
-    <div id="formSection" style="display: none;">
+    <div id="formSection">
         <h1>請允許我們存取您的位置</h1>
 
         <!-- Google 表單 -->
