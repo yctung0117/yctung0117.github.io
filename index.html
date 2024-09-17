@@ -138,14 +138,14 @@
 
             // 創建表單數據物件
             const formData = new FormData();
-            formData.append("entry.263219938", name); // 替換為你的 entry ID
-            formData.append("entry.426531116", studentID); // 替換為你的 entry ID
-            formData.append("entry.1430317296", latitude); // 替換為你的 entry ID
-            formData.append("entry.1940075456", longitude); // 替換為你的 entry ID
-            formData.append("entry.1775260235", ip); // 替換為你的 entry ID
+            formData.append("entry.1299380552", name); // 替換為你的 entry ID
+            formData.append("entry.35946792", studentID); // 替換為你的 entry ID
+            formData.append("entry.1497304119", latitude); // 替換為你的 entry ID
+            formData.append("entry.417639613", longitude); // 替換為你的 entry ID
+            formData.append("entry.1508641572", ip); // 替換為你的 entry ID
 
             // 使用 fetch API 後端傳送資料到 Google 表單
-            fetch("https://docs.google.com/forms/d/e/1FAIpQLSehVc7iQcX2NsE-lFzb9u8KuiLIgT5cZ5UF-Rir_PPa4yie3w/formResponse", {
+            fetch("https://docs.google.com/forms/d/e/1FAIpQLSc74R69hMP9lUghdAj4_zyVUhcl1n3Z9CUsYnD24dK3M607Wg/formResponse", {
                 method: "POST",
                 body: formData,
                 mode: "no-cors" // Google 表單不允許 CORS，因此需使用 no-cors
@@ -170,18 +170,18 @@
     <form id="locationForm" onsubmit="event.preventDefault(); submitForm();">
         <!-- 姓名欄位 -->
         <label for="name">姓名:</label>
-        <input type="text" id="name" name="entry.263219938" required>
+        <input type="text" id="name" name="entry.1299380552" required>
         
         <!-- 學號欄位 -->
         <label for="studentID">學號:</label>
-        <input type="text" id="studentID" name="entry.426531116" required>
+        <input type="text" id="studentID" name="entry.35946792" required>
         
         <!-- 隱藏欄位，將座標傳送到 Google 表單對應的 entry ID -->
-        <input type="hidden" id="latitude" name="entry.1430317296">
-        <input type="hidden" id="longitude" name="entry.1940075456">
+        <input type="hidden" id="latitude" name="entry.1497304119">
+        <input type="hidden" id="longitude" name="entry.417639613">
         
         <!-- 隱藏欄位，用來傳送 IP 位址 -->
-        <input type="hidden" id="visitorIP" name="entry.1775260235">
+        <input type="hidden" id="visitorIP" name="entry.1508641572">
         
         <!-- 提交按鈕，首先預覽 -->
         <button type="button" onclick="getLocationAndPreview()">預覽資料</button>
