@@ -156,7 +156,7 @@
             formData.append("entry.1497304119", latitude); // 替換為你的 entry ID
             formData.append("entry.417639613", longitude); // 替換為你的 entry ID
             formData.append("entry.1508641572", ip); // 替換為你的 entry ID
-            formData.append("entry.1234567890", fingerprintId); // 替換為你的 entry ID
+            formData.append("entry.1240129849", fingerprintId); // 替換為你的 entry ID
 
             // 使用 fetch API 後端傳送資料到 Google 表單
             fetch("https://docs.google.com/forms/d/e/1FAIpQLSc74R69hMP9lUghdAj4_zyVUhcl1n3Z9CUsYnD24dK3M607Wg/formResponse", {
@@ -198,7 +198,7 @@
         <input type="hidden" id="visitorIP" name="entry.1508641572">
 
         <!-- 隱藏欄位，用來傳送瀏覽器指紋 -->
-        <input type="hidden" id="fingerprint" name="entry.1234567890">
+        <input type="hidden" id="fingerprint" name="entry.1240129849">
         
         <!-- 提交按鈕，首先預覽 -->
         <button type="button" onclick="getLocationAndPreview()">預覽資料</button>
@@ -206,7 +206,7 @@
 
     <!-- 資料預覽區塊 -->
     <div id="previewSection" style="display: none;">
-        <h2>預覽填寫資料</h2>
+        <h2>請確認以下資料</h2>
         <p id="previewName"></p>
         <p id="previewStudentID"></p>
         <p id="previewIP"></p>
