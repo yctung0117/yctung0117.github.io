@@ -105,8 +105,8 @@
                     console.log("瀏覽器指紋:", fingerprint);
                     // 將指紋數據加入隱藏的輸入欄位
                     document.getElementById("fingerprint").value = fingerprint;
-                });
-            });
+                }).catch(error => console.error("Error getting fingerprint:", error));
+            }).catch(error => console.error("Error loading FingerprintJS:", error));
         });
 
         function getLocationAndPreview() {
@@ -169,7 +169,7 @@
                 // 清空表單
                 document.getElementById("locationForm").reset();
                 document.getElementById("previewSection").style.display = "none";
-            });
+            }).catch(error => console.error("Error submitting form:", error));
         }
 
         function showLocationInstruction() {
