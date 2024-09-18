@@ -11,7 +11,7 @@
             padding: 0;
             background-color: #f4f4f4;
         }
-        h1, h2 {
+        h1 {
             text-align: center;
             margin: 20px 0;
         }
@@ -186,8 +186,6 @@
                 localStorage.setItem('lastCheckInDate', today);
                 // 表單提交成功後，顯示成功訊息
                 alert("簽到成功！");
-                // 跳轉到 Google Sheet
-                window.location.href = "https://docs.google.com/spreadsheets/d/1tjLJNQYlqeM9UUfhRR_H0FC4zSYyNoBev2mrkfWp9-c/edit?resourcekey=&gid=1510047170#gid=1510047170";
             }).catch((error) => {
                 console.error("簽到失敗：", error);
             });
@@ -200,12 +198,6 @@
             if (lastCheckInDate === today) {
                 alert("您今天已經簽到過了。請明天再試。");
                 document.getElementById("locationForm").style.display = "none";
-                // 3 秒後跳轉到 Google Sheet
-                setTimeout(function() {
-                    window.location.href = "https://docs.google.com/spreadsheets/d/1tjLJNQYlqeM9UUfhRR_H0FC4zSYyNoBev2mrkfWp9-c/edit?resourcekey=&gid=1510047170#gid=1510047170";
-                }, 3000);
-            } else {
-                document.getElementById("locationForm").style.display = "block";
             }
         }
 
@@ -213,35 +205,49 @@
             document.getElementById("locationInstruction").style.display = "block";
         }
     </script>
+    <script src="https://openfpcdn.io/fingerprintjs/v3"></script> <!-- FingerprintJS 外部資源 -->
 </head>
 <body>
     <h1>簽到表單</h1>
-    <form id="locationForm">
-        <label for="name">姓名</label>
-        <input type="text" id="name" name="name" required>
-        <label for="studentID">學號</label>
-        <input type="text" id="studentID" name="studentID" required>
+    <form id="locationForm" action="#" method="POST">
+        <!-- 姓名欄位 -->
+        <label for="name">姓名:</label>
+        <input type="text" id="name" name="entry.1299380552" required>
 
-        <input type="hidden" id="latitude" name="latitude">
-        <input type="hidden" id="longitude" name="longitude">
-        <input type="hidden" id="visitorIP" name="visitorIP">
-        <input type="hidden" id="browserFingerprint" name="browserFingerprint">
+        <!-- 學號欄位 -->
+        <label for="studentID">學號:</label>
+        <input type="text" id="studentID" name="entry.35946792" required>
 
+        <!-- 隱藏欄位，用來傳送地理位置 -->
+        <input type="hidden" id="latitude" name="entry.1497304119">
+        <input type="hidden" id="longitude" name="entry.417639613">
+
+        <!-- 隱藏欄位，用來傳送 IP 位址 -->
+        <input type="hidden" id="visitorIP" name="entry.1508641572">
+
+        <!-- 隱藏欄位，用來傳送瀏覽器指紋 -->
+        <input type="hidden" id="browserFingerprint" name="entry.172774444">
+
+        <!-- 按鈕: 預覽資料 -->
         <button type="button" onclick="getLocationAndPreview()">預覽資料</button>
     </form>
 
-    <div id="previewSection">
+    <!-- 預覽資料區塊 -->
+    <div id="previewSection" style="display: none;">
         <h2>預覽資料</h2>
         <p id="previewName"></p>
         <p id="previewStudentID"></p>
         <p id="previewIP"></p>
         <p id="previewFingerprint"></p>
-        <button id="submitBtn" onclick="submitForm()">確認並送出</button>
+
+        <!-- 送出按鈕，預設隱藏，點擊預覽資料後才顯示 -->
+        <button id="submitBtn" onclick="submitForm()">送出</button>
     </div>
 
+    <!-- 位置開啟教學 -->
     <div id="locationInstruction">
-        <h2>請開啟定位服務</h2>
-        <p>請在瀏覽器或行動裝置的設定中開啟定位服務，然後重新整理此頁面以繼續提交表單。</p>
+        <h2>如何開啟位置服務</h2>
+        <p>請前往您的手機設定，並開啟位置服務。</p>
     </div>
 </body>
 </html>
