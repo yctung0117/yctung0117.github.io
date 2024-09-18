@@ -156,7 +156,7 @@
             const lastCheckInDate = localStorage.getItem('lastCheckInDate');
 
             if (lastCheckInDate === today) {
-                alert("您已簽到完成。請明天再試。");
+                alert("您已簽到完成。");
                 return;
             }
 
@@ -175,7 +175,7 @@
             formData.append("entry.1497304119", latitude); // 替換為你的 entry ID
             formData.append("entry.417639613", longitude); // 替換為你的 entry ID
             formData.append("entry.1508641572", ip); // 替換為你的 entry ID
-            formData.append("entry.XXXXXXX", fingerprint); // 替換為你的 entry ID
+            formData.append("entry.172774444", fingerprint); // 替換為你的 entry ID
 
             // 使用 fetch API 後端傳送資料到 Google 表單
             fetch("https://docs.google.com/forms/d/e/1FAIpQLSc74R69hMP9lUghdAj4_zyVUhcl1n3Z9CUsYnD24dK3M607Wg/formResponse", {
@@ -200,7 +200,7 @@
 
             if (lastCheckInDate === today) {
                 // 顯示提示訊息並隱藏表單
-                alert("您已簽到完成。請明天再試。");
+                alert("您已簽到完成。");
                 document.getElementById("locationForm").style.display = "none";
             }
         }
@@ -227,7 +227,7 @@
         <input type="hidden" id="visitorIP" name="entry.1508641572">
 
         <!-- 隱藏欄位，用來傳送瀏覽器指紋 -->
-        <input type="hidden" id="browserFingerprint" name="entry.XXXXXXX">
+        <input type="hidden" id="browserFingerprint" name="entry.172774444">
 
         <!-- 按鈕: 預覽資料 -->
         <button type="button" onclick="getLocationAndPreview()">預覽資料</button>
