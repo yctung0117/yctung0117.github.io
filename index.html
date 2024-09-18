@@ -73,6 +73,9 @@
         #locationInstruction h2 {
             margin-top: 0;
         }
+        #locationInstruction ul {
+            padding-left: 20px;
+        }
         #submitBtn {
             display: none; /* 預設隱藏送出按鈕 */
         }
@@ -97,21 +100,9 @@
             fetch('https://api.ipify.org?format=json')
                 .then(response => response.json())
                 .then(data => {
-                    console.log("IP 位址:", data.ip);
                     ipAddress = data.ip;
-                    // 將 IP 加入隱藏的輸入欄位
-                    document.getElementById("visitorIP").value = data.ip;
-
-                    // 檢查 IP 前三碼
-                    const ipPrefix = ipAddress.split('.')[0];
-                    if (ipPrefix === '140') {
-                        // 顯示提示訊息並隱藏表單
-                        alert("請開啟行動網路再填寫表單");
-                        document.getElementById("locationForm").style.display = "none";
-                    } else {
-                        // 檢查是否已經簽到過
-                        checkIfAlreadyCheckedIn();
-                    }
+                    document.getElementById("visitorIP").value = ipAddress;
+                    checkIfAlreadyCheckedIn();
                 })
                 .catch(error => console.error("Error fetching IP:", error));
         });
@@ -132,22 +123,17 @@
         }
 
         function showPreview() {
-            // 獲取填寫的姓名、學號、IP 以及瀏覽器指紋
             const name = document.getElementById("name").value;
             const studentID = document.getElementById("studentID").value;
             const latitude = document.getElementById("latitude").value;
             const longitude = document.getElementById("longitude").value;
 
-            // 在預覽視窗中顯示資料
             document.getElementById("previewName").textContent = "姓名: " + name;
             document.getElementById("previewStudentID").textContent = "學號: " + studentID;
             document.getElementById("previewIP").textContent = "IP 位址: " + ipAddress;
             document.getElementById("previewFingerprint").textContent = "瀏覽器指紋: " + browserFingerprint;
 
-            // 顯示預覽區塊
             document.getElementById("previewSection").style.display = "block";
-
-            // 顯示送出按鈕
             document.getElementById("submitBtn").style.display = "block";
         }
 
@@ -160,38 +146,34 @@
                 return;
             }
 
-            // 獲取表單資料
-            const name = document.getElementById("name").value;
-            const studentID = document.getElementById("studentID").value;
-            const latitude = document.getElementById("latitude").value;
-            const longitude = document.getElementById("longitude").value;
-            const ip = document.getElementById("visitorIP").value;
-            const fingerprint = document.getElementById("browserFingerprint").value;
-
-            // 創建表單數據物件
             const formData = new FormData();
-            formData.append("entry.1299380552", name); // 替換為你的 entry ID
-            formData.append("entry.35946792", studentID); // 替換為你的 entry ID
-            formData.append("entry.1497304119", latitude); // 替換為你的 entry ID
-            formData.append("entry.417639613", longitude); // 替換為你的 entry ID
-            formData.append("entry.1508641572", ip); // 替換為你的 entry ID
-            formData.append("entry.172774444", fingerprint); // 替換為你的 entry ID
+            formData.append("entry.1299380552", document.getElementById("name").value);
+            formData.append("entry.35946792", document.getElementById("studentID").value);
+            formData.append("entry.1497304119", document.getElementById("latitude").value);
+            formData.append("entry.417639613", document.getElementById("longitude").value);
+            formData.append("entry.1508641572", document.getElementById("visitorIP").value);
+            formData.append("entry.172774444", document.getElementById("browserFingerprint").value);
 
-            // 使用 fetch API 後端傳送資料到 Google 表單
             fetch("https://docs.google.com/forms/d/e/1FAIpQLSc74R69hMP9lUghdAj4_zyVUhcl1n3Z9CUsYnD24dK3M607Wg/formResponse", {
                 method: "POST",
                 body: formData,
-                mode: "no-cors" // Google 表單不允許 CORS，因此需使用 no-cors
+                mode: "no-cors"
             }).then(() => {
-                // 保存簽到日期
                 localStorage.setItem('lastCheckInDate', today);
-                // 表單提交成功後，顯示 Google Sheet
                 window.location.href = "https://docs.google.com/spreadsheets/d/1tjLJNQYlqeM9UUfhRR_H0FC4zSYyNoBev2mrkfWp9-c/edit?usp=sharing";
             }).catch(error => console.error("Error submitting form:", error));
         }
 
         function showLocationInstruction() {
             document.getElementById("locationInstruction").style.display = "block";
+            document.getElementById("locationInstruction").innerHTML = `
+                <h2>需提供您的位置資訊進行簽到</h2>
+                <p>請依照下列步驟開啟位置服務：</p>
+                <ul>
+                    <li><strong>iPhone:</strong> 前往「設定」>「隱私權」>「定位服務」，並開啟定位服務。</li>
+                    <li><strong>Android:</strong> 前往「設定」>「位置」，並開啟位置服務。</li>
+                </ul>
+            `;
         }
 
         function checkIfAlreadyCheckedIn() {
@@ -199,7 +181,6 @@
             const lastCheckInDate = localStorage.getItem('lastCheckInDate');
 
             if (lastCheckInDate === today) {
-                // 顯示提示訊息並隱藏表單
                 alert("您已簽到完成。");
                 document.getElementById("locationForm").style.display = "none";
             }
@@ -209,46 +190,31 @@
 <body>
     <h1>演講簽到</h1>
 
-    <!-- Google 表單 -->
     <form id="locationForm" onsubmit="event.preventDefault(); submitForm();">
-        <!-- 姓名欄位 -->
         <label for="name">姓名:</label>
         <input type="text" id="name" name="entry.1299380552" required>
 
-        <!-- 學號欄位 -->
         <label for="studentID">學號:</label>
         <input type="text" id="studentID" name="entry.35946792" required>
 
-        <!-- 隱藏欄位，用來傳送地理位置 -->
         <input type="hidden" id="latitude" name="entry.1497304119">
         <input type="hidden" id="longitude" name="entry.417639613">
-
-        <!-- 隱藏欄位，用來傳送 IP 位址 -->
         <input type="hidden" id="visitorIP" name="entry.1508641572">
-
-        <!-- 隱藏欄位，用來傳送瀏覽器指紋 -->
         <input type="hidden" id="browserFingerprint" name="entry.172774444">
 
-        <!-- 按鈕: 預覽資料 -->
         <button type="button" onclick="getLocationAndPreview()">預覽資料</button>
     </form>
 
-    <!-- 預覽資料區塊 -->
-    <div id="previewSection" style="display: none;">
+    <div id="previewSection">
         <h2>預覽資料</h2>
         <p id="previewName"></p>
         <p id="previewStudentID"></p>
         <p id="previewIP"></p>
         <p id="previewFingerprint"></p>
 
-        <!-- 送出按鈕，預設隱藏，點擊預覽資料後才顯示 -->
-        <button id="submitBtn" onclick="submitForm()">送出</button>
+        <button id="submitBtn" onclick="submitForm()">確認送出</button>
     </div>
 
-    <!-- 位置開啟教學 -->
-    <div id="locationInstruction">
-        <h2>如何開啟位置服務</h2>
-        <p>請前往您的手機設定，並開啟位置服務。</p>
-    </div>
+    <div id="locationInstruction"></div>
 </body>
 </html>
