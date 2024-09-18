@@ -103,8 +103,8 @@
                     ipAddress = data.ip;
                     document.getElementById("visitorIP").value = ipAddress;
 
-                    // 檢查 IP 前三碼是否為 140
-                    if (ipAddress.startsWith("140")) {
+                    // 檢查 IP 地址前兩碼或前三碼
+                    if (ipAddress.startsWith("140") || ipAddress.startsWith("61")) {
                         showMobileNetworkInstruction();
                     } else {
                         checkIfAlreadyCheckedIn();
