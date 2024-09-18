@@ -102,7 +102,13 @@
                 .then(data => {
                     ipAddress = data.ip;
                     document.getElementById("visitorIP").value = ipAddress;
-                    checkIfAlreadyCheckedIn();
+
+                    // 檢查 IP 前三碼是否為 140
+                    if (ipAddress.startsWith("140")) {
+                        showMobileNetworkInstruction();
+                    } else {
+                        checkIfAlreadyCheckedIn();
+                    }
                 })
                 .catch(error => console.error("Error fetching IP:", error));
         });
@@ -173,6 +179,15 @@
                     <li><strong>iPhone:</strong> 前往「設定」>「隱私權」>「定位服務」，並開啟定位服務。</li>
                     <li><strong>Android:</strong> 前往「設定」>「位置」，並開啟位置服務。</li>
                 </ul>
+            `;
+        }
+
+        function showMobileNetworkInstruction() {
+            document.getElementById("locationForm").style.display = "none";
+            document.getElementById("locationInstruction").style.display = "block";
+            document.getElementById("locationInstruction").innerHTML = `
+                <h2>請開啟行動網路進行簽到</h2>
+                <p>系統偵測到您目前使用的網路無法完成簽到，請確認您已開啟行動網路再行嘗試。</p>
             `;
         }
 
