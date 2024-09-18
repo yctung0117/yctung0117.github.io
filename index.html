@@ -77,7 +77,6 @@
             display: none; /* 預設隱藏送出按鈕 */
         }
     </style>
-    <script src="https://cdn.jsdelivr.net/npm/@fingerprintjs/fingerprintjs@3/dist/fp.min.js"></script>
     <script>
         let ipAddress = "";
         let browserFingerprint = "";
@@ -156,7 +155,7 @@
             const lastCheckInDate = localStorage.getItem('lastCheckInDate');
 
             if (lastCheckInDate === today) {
-                alert("您已簽到完成。");
+                alert("您已簽到完成。請明天再試。");
                 return;
             }
 
@@ -185,13 +184,11 @@
             }).then(() => {
                 // 保存簽到日期
                 localStorage.setItem('lastCheckInDate', today);
-                // 表單提交成功後，顯示 Google Sheet
-                window.location.href = "https://docs.google.com/spreadsheets/d/1tjLJNQYlqeM9UUfhRR_H0FC4zSYyNoBev2mrkfWp9-c/edit?usp=sharing";
-            }).catch(error => console.error("Error submitting form:", error));
-        }
-
-        function showLocationInstruction() {
-            document.getElementById("locationInstruction").style.display = "block";
+                // 表單提交成功後，顯示成功訊息
+                alert("簽到成功！");
+            }).catch((error) => {
+                console.error("簽到失敗：", error);
+            });
         }
 
         function checkIfAlreadyCheckedIn() {
@@ -199,18 +196,20 @@
             const lastCheckInDate = localStorage.getItem('lastCheckInDate');
 
             if (lastCheckInDate === today) {
-                // 顯示提示訊息並隱藏表單
-                alert("您已簽到完成。");
+                alert("您今天已經簽到過了。請明天再試。");
                 document.getElementById("locationForm").style.display = "none";
             }
         }
+
+        function showLocationInstruction() {
+            document.getElementById("locationInstruction").style.display = "block";
+        }
     </script>
+    <script src="https://openfpcdn.io/fingerprintjs/v3"></script> <!-- FingerprintJS 外部資源 -->
 </head>
 <body>
-    <h1>演講簽到</h1>
-
-    <!-- Google 表單 -->
-    <form id="locationForm" onsubmit="event.preventDefault(); submitForm();">
+    <h1>簽到表單</h1>
+    <form id="locationForm" action="#" method="POST">
         <!-- 姓名欄位 -->
         <label for="name">姓名:</label>
         <input type="text" id="name" name="entry.1299380552" required>
