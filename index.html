@@ -160,13 +160,13 @@
             formData.append("entry.1508641572", document.getElementById("visitorIP").value);
             formData.append("entry.172774444", document.getElementById("browserFingerprint").value);
 
-            fetch("https://docs.google.com/forms/d/e/1FAIpQLSc74R69hMP9lUghdAj4_zyVUhcl1n3Z9CUsYnD24dK3M607Wg/formResponse", {
+            fetch("https://docs.google.com/forms/d/e/1FAIpQLScxzZc0GVmTzP_2AYj81A9RwTI8mDdy4QIzH8TpBcPOvIwm6w/formResponse", {
                 method: "POST",
                 body: formData,
                 mode: "no-cors"
             }).then(() => {
                 localStorage.setItem('lastCheckInDate', today);
-                window.location.href = "https://docs.google.com/spreadsheets/d/1tjLJNQYlqeM9UUfhRR_H0FC4zSYyNoBev2mrkfWp9-c/edit?usp=sharing";
+                window.location.href = "https://docs.google.com/spreadsheets/d/1f4Vm0BvS6xQ5Y8kJMI3iKatdQO9WIaV6qhmaAIc3QVk/edit?usp=sharing";
             }).catch(error => console.error("Error submitting form:", error));
         }
 
