@@ -73,8 +73,20 @@
             margin-top: 0;
         }
     </style>
+    <script src="https://cdn.jsdelivr.net/npm/@fingerprintjs/fingerprintjs@3/dist/fp.min.js"></script>
     <script>
         let ipAddress = "";
+        let browserFingerprint = "";
+
+        // 使用 FingerprintJS 擷取瀏覽器指紋
+        FingerprintJS.load().then(fp => {
+            fp.get().then(result => {
+                // 獲取指紋唯一識別碼
+                browserFingerprint = result.visitorId;
+                // 將指紋加入隱藏的輸入欄位
+                document.getElementById("browserFingerprint").value = browserFingerprint;
+            });
+        });
 
         document.addEventListener("DOMContentLoaded", function() {
             // 使用 ipify API 獲取訪問者 IP
@@ -116,7 +128,7 @@
         }
 
         function showPreview() {
-            // 獲取填寫的姓名、學號和地理位置
+            // 獲取填寫的姓名、學號、IP 以及瀏覽器指紋
             const name = document.getElementById("name").value;
             const studentID = document.getElementById("studentID").value;
             const latitude = document.getElementById("latitude").value;
@@ -126,6 +138,7 @@
             document.getElementById("previewName").textContent = "姓名: " + name;
             document.getElementById("previewStudentID").textContent = "學號: " + studentID;
             document.getElementById("previewIP").textContent = "IP 位址: " + ipAddress;
+            document.getElementById("previewFingerprint").textContent = "瀏覽器指紋: " + browserFingerprint;
 
             // 顯示預覽區塊
             document.getElementById("previewSection").style.display = "block";
@@ -146,6 +159,7 @@
             const latitude = document.getElementById("latitude").value;
             const longitude = document.getElementById("longitude").value;
             const ip = document.getElementById("visitorIP").value;
+            const fingerprint = document.getElementById("browserFingerprint").value;
 
             // 創建表單數據物件
             const formData = new FormData();
@@ -154,6 +168,7 @@
             formData.append("entry.1497304119", latitude); // 替換為你的 entry ID
             formData.append("entry.417639613", longitude); // 替換為你的 entry ID
             formData.append("entry.1508641572", ip); // 替換為你的 entry ID
+            formData.append("entry.XXXXXXX", fingerprint); // 替換為你的 entry ID
 
             // 使用 fetch API 後端傳送資料到 Google 表單
             fetch("https://docs.google.com/forms/d/e/1FAIpQLSc74R69hMP9lUghdAj4_zyVUhcl1n3Z9CUsYnD24dK3M607Wg/formResponse", {
@@ -192,36 +207,41 @@
         <!-- 姓名欄位 -->
         <label for="name">姓名:</label>
         <input type="text" id="name" name="entry.1299380552" required>
-        
+
         <!-- 學號欄位 -->
         <label for="studentID">學號:</label>
         <input type="text" id="studentID" name="entry.35946792" required>
-        
-        <!-- 隱藏欄位，將座標傳送到 Google 表單對應的 entry ID -->
+
+        <!-- 隱藏欄位，用來傳送地理位置 -->
         <input type="hidden" id="latitude" name="entry.1497304119">
         <input type="hidden" id="longitude" name="entry.417639613">
-        
+
         <!-- 隱藏欄位，用來傳送 IP 位址 -->
         <input type="hidden" id="visitorIP" name="entry.1508641572">
 
-        <!-- 提交按鈕，首先預覽 -->
+        <!-- 隱藏欄位，用來傳送瀏覽器指紋 -->
+        <input type="hidden" id="browserFingerprint" name="entry.XXXXXXX">
+
+        <!-- 按鈕: 預覽資料 -->
         <button type="button" onclick="getLocationAndPreview()">預覽資料</button>
+        
+        <!-- 按鈕: 送出表單 -->
+        <button type="submit">送出</button>
     </form>
 
-    <!-- 資料預覽區塊 -->
+    <!-- 預覽資料區塊 -->
     <div id="previewSection" style="display: none;">
-        <h2>預覽</h2>
+        <h2>預覽資料</h2>
         <p id="previewName"></p>
         <p id="previewStudentID"></p>
         <p id="previewIP"></p>
-        <button type="button" onclick="submitForm()">確認並提交</button>
+        <p id="previewFingerprint"></p>
     </div>
 
     <!-- 位置開啟教學 -->
     <div id="locationInstruction">
-        <h2>位置開啟教學</h2>
-        <p>請確保您的瀏覽器已開啟地理位置服務，並允許本網站獲取您的位置資訊。</p>
-        <button type="button" onclick="document.getElementById('locationInstruction').style.display = 'none'">關閉</button>
+        <h2>如何開啟位置服務</h2>
+        <p>請前往您的手機設定，並開啟位置服務。</p>
     </div>
 </body>
 </html>
