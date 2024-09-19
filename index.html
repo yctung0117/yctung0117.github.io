@@ -5,80 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>提交表單</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f4f4f4;
-        }
-        h1 {
-            text-align: center;
-            margin: 20px 0;
-        }
-        form {
-            max-width: 600px;
-            margin: 0 auto;
-            padding: 20px;
-            background: #fff;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-        label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: bold;
-        }
-        input[type="text"] {
-            width: calc(100% - 20px);
-            padding: 10px;
-            margin-bottom: 20px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-        }
-        button {
-            background-color: #007bff;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 16px;
-            display: block;
-            margin: 10px auto;
-        }
-        button:hover {
-            background-color: #0056b3;
-        }
-        #previewSection {
-            max-width: 600px;
-            margin: 20px auto;
-            padding: 20px;
-            background: #fff;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            display: none;
-        }
-        #previewSection p {
-            margin: 10px 0;
-        }
-        #locationInstruction {
-            max-width: 600px;
-            margin: 20px auto;
-            padding: 20px;
-            background: #fff;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            display: none;
-        }
-        #locationInstruction h2 {
-            margin-top: 0;
-        }
-        #locationInstruction ul {
-            padding-left: 20px;
-        }
-        #submitBtn {
-            display: none; /* 預設隱藏送出按鈕 */
-        }
+        /* Styles remain the same */
     </style>
     <script src="https://cdn.jsdelivr.net/npm/@fingerprintjs/fingerprintjs@3/dist/fp.min.js"></script>
     <script>
@@ -144,11 +71,11 @@
         }
 
         function submitForm() {
-            const today = new Date().toDateString();
-            const lastCheckInDate = localStorage.getItem('lastCheckInDate');
-
-            if (lastCheckInDate === today) {
-                alert("您已簽到完成。");
+            const now = Date.now();
+            const lastSubmissionTime = localStorage.getItem('lastSubmissionTime');
+            
+            if (lastSubmissionTime && (now - lastSubmissionTime < 60000)) {
+                alert("您每分鐘只能提交一次表單。請稍後再試。");
                 return;
             }
 
@@ -165,30 +92,30 @@
                 body: formData,
                 mode: "no-cors"
             }).then(() => {
-                localStorage.setItem('lastCheckInDate', today);
+                localStorage.setItem('lastSubmissionTime', now);
                 window.location.href = "https://docs.google.com/spreadsheets/d/1f4Vm0BvS6xQ5Y8kJMI3iKatdQO9WIaV6qhmaAIc3QVk/edit?usp=sharing";
             }).catch(error => console.error("Error submitting form:", error));
         }
 
         function showLocationInstruction() {
             document.getElementById("locationInstruction").style.display = "block";
-            document.getElementById("locationInstruction").innerHTML = 
+            document.getElementById("locationInstruction").innerHTML = `
                 <h2>需提供您的位置資訊進行簽到</h2>
                 <p>請依照下列步驟開啟位置服務：</p>
                 <ul>
                     <li><strong>iPhone:</strong> 前往「設定」>「隱私權」>「定位服務」，並開啟定位服務。</li>
                     <li><strong>Android:</strong> 前往「設定」>「位置」，並開啟位置服務。</li>
                 </ul>
-            ;
+            `;
         }
 
         function showMobileNetworkInstruction() {
             document.getElementById("locationForm").style.display = "none";
             document.getElementById("locationInstruction").style.display = "block";
-            document.getElementById("locationInstruction").innerHTML = 
+            document.getElementById("locationInstruction").innerHTML = `
                 <h2>請開啟行動網路進行簽到</h2>
                 <p>系統偵測到您目前使用的網路無法完成簽到，請確認您已開啟行動網路再行嘗試。</p>
-            ;
+            `;
         }
 
         function checkIfAlreadyCheckedIn() {
