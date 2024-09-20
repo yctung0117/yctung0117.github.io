@@ -116,11 +116,15 @@
         function showPreview() {
             const name = document.getElementById("name").value;
             const studentID = document.getElementById("studentID").value;
+            const latitude = document.getElementById("latitude").value;
+            const longitude = document.getElementById("longitude").value;
 
             document.getElementById("previewName").textContent = "姓名: " + name;
             document.getElementById("previewStudentID").textContent = "學號: " + studentID;
             document.getElementById("previewIP").textContent = "IP 位址: " + ipAddress;
             document.getElementById("previewFingerprint").textContent = "瀏覽器指紋: " + browserFingerprint;
+            document.getElementById("previewLatitude").textContent = "緯度: " + latitude;
+            document.getElementById("previewLongitude").textContent = "經度: " + longitude;
 
             document.getElementById("previewSection").style.display = "block";
             document.getElementById("submitBtn").style.display = "block";
@@ -201,6 +205,8 @@
         <p id="previewStudentID"></p>
         <p id="previewIP"></p>
         <p id="previewFingerprint"></p>
+        <p id="previewLatitude"></p>
+        <p id="previewLongitude"></p>
 
         <button id="submitBtn" onclick="submitForm()">確認送出</button>
     </div>
