@@ -5,7 +5,74 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>提交表單</title>
     <style>
-        /* Styles remain the same */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 10px;
+            background-color: #f4f4f4;
+        }
+
+        h1 {
+            text-align: center;
+            margin: 20px 0;
+            font-size: 1.5em;
+        }
+
+        form {
+            max-width: 100%;
+            margin: 0 auto;
+            padding: 10px;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+
+        input[type="text"], button {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1em;
+        }
+
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        #previewSection, #locationInstruction {
+            margin: 20px auto;
+            padding: 20px;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        #previewSection {
+            display: none;
+        }
+
+        #previewSection p {
+            margin: 10px 0;
+        }
+
+        #submitBtn {
+            display: none;
+        }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/@fingerprintjs/fingerprintjs@3/dist/fp.min.js"></script>
     <script>
@@ -15,27 +82,19 @@
         // 使用 FingerprintJS 擷取瀏覽器指紋
         FingerprintJS.load().then(fp => {
             fp.get().then(result => {
-                // 獲取指紋唯一識別碼
                 browserFingerprint = result.visitorId;
-                // 將指紋加入隱藏的輸入欄位
                 document.getElementById("browserFingerprint").value = browserFingerprint;
             });
         });
 
         document.addEventListener("DOMContentLoaded", function() {
-            // 使用 ipify API 獲取訪問者 IP
             fetch('https://api.ipify.org?format=json')
                 .then(response => response.json())
                 .then(data => {
                     ipAddress = data.ip;
                     document.getElementById("visitorIP").value = ipAddress;
 
-                    // 檢查 IP 地址前兩碼或前三碼
-                    if (ipAddress.startsWith("140") || ipAddress.startsWith("61")) {
-                        showMobileNetworkInstruction();
-                    } else {
-                        checkIfAlreadyCheckedIn();
-                    }
+                    checkIfAlreadyCheckedIn();
                 })
                 .catch(error => console.error("Error fetching IP:", error));
         });
@@ -45,9 +104,8 @@
                 navigator.geolocation.getCurrentPosition(function (position) {
                     document.getElementById("latitude").value = position.coords.latitude;
                     document.getElementById("longitude").value = position.coords.longitude;
-                    showPreview(); // 顯示預覽視窗
-                }, function (error) {
-                    // 顯示位置開啟教學
+                    showPreview();
+                }, function () {
                     showLocationInstruction();
                 });
             } else {
@@ -58,8 +116,6 @@
         function showPreview() {
             const name = document.getElementById("name").value;
             const studentID = document.getElementById("studentID").value;
-            const latitude = document.getElementById("latitude").value;
-            const longitude = document.getElementById("longitude").value;
 
             document.getElementById("previewName").textContent = "姓名: " + name;
             document.getElementById("previewStudentID").textContent = "學號: " + studentID;
@@ -71,11 +127,12 @@
         }
 
         function submitForm() {
-            const now = Date.now();
-            const lastSubmissionTime = localStorage.getItem('lastSubmissionTime');
-            
-            if (lastSubmissionTime && (now - lastSubmissionTime < 60000)) {
-                alert("您每分鐘只能提交一次表單。請稍後再試。");
+            const today = new Date().toDateString();
+            const lastSubmissionIP = localStorage.getItem('lastSubmissionIP');
+            const lastSubmissionDate = localStorage.getItem('lastSubmissionDate');
+
+            if (lastSubmissionIP === ipAddress && lastSubmissionDate === today) {
+                alert("此 IP 今日已提交過表單，請明日再試。");
                 return;
             }
 
@@ -92,13 +149,13 @@
                 body: formData,
                 mode: "no-cors"
             }).then(() => {
-                localStorage.setItem('lastSubmissionTime', now);
+                localStorage.setItem('lastSubmissionIP', ipAddress);
+                localStorage.setItem('lastSubmissionDate', today);
                 window.location.href = "https://docs.google.com/spreadsheets/d/1f4Vm0BvS6xQ5Y8kJMI3iKatdQO9WIaV6qhmaAIc3QVk/edit?usp=sharing";
             }).catch(error => console.error("Error submitting form:", error));
         }
 
         function showLocationInstruction() {
-            document.getElementById("locationInstruction").style.display = "block";
             document.getElementById("locationInstruction").innerHTML = `
                 <h2>需提供您的位置資訊進行簽到</h2>
                 <p>請依照下列步驟開啟位置服務：</p>
@@ -106,15 +163,6 @@
                     <li><strong>iPhone:</strong> 前往「設定」>「隱私權」>「定位服務」，並開啟定位服務。</li>
                     <li><strong>Android:</strong> 前往「設定」>「位置」，並開啟位置服務。</li>
                 </ul>
-            `;
-        }
-
-        function showMobileNetworkInstruction() {
-            document.getElementById("locationForm").style.display = "none";
-            document.getElementById("locationInstruction").style.display = "block";
-            document.getElementById("locationInstruction").innerHTML = `
-                <h2>請開啟行動網路進行簽到</h2>
-                <p>系統偵測到您目前使用的網路無法完成簽到，請確認您已開啟行動網路再行嘗試。</p>
             `;
         }
 
