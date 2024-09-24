@@ -54,7 +54,7 @@
             background-color: #0056b3;
         }
 
-        #previewSection, #locationInstruction {
+        #previewSection, #locationInstruction, #errorSection {
             margin: 20px auto;
             padding: 20px;
             background: #fff;
@@ -72,6 +72,11 @@
 
         #submitBtn {
             display: none;
+        }
+
+        #errorSection {
+            display: none;
+            color: red;
         }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/@fingerprintjs/fingerprintjs@3/dist/fp.min.js"></script>
@@ -94,10 +99,25 @@
                     ipAddress = data.ip;
                     document.getElementById("visitorIP").value = ipAddress;
 
-                    checkIfAlreadyCheckedIn();
+                    checkIPAndDisplayForm();
                 })
                 .catch(error => console.error("Error fetching IP:", error));
         });
+
+        function checkIPAndDisplayForm() {
+            const ipParts = ipAddress.split('.');
+            const firstPart = ipParts[0];
+            const secondPart = ipParts[1];
+
+            if (firstPart === "124" || (firstPart === "60" && secondPart)) {
+                document.getElementById("errorSection").innerText = "請開啟行動網路再行簽到";
+                document.getElementById("errorSection").style.display = "block";
+                document.getElementById("locationForm").style.display = "none";
+            } else {
+                document.getElementById("locationForm").style.display = "block";
+                checkIfAlreadyCheckedIn();
+            }
+        }
 
         function getLocationAndPreview() {
             if (navigator.geolocation) {
@@ -183,6 +203,8 @@
 </head>
 <body>
     <h1>演講簽到</h1>
+
+    <div id="errorSection"></div>
 
     <form id="locationForm" onsubmit="event.preventDefault(); submitForm();">
         <label for="name">姓名:</label>
