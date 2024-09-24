@@ -109,7 +109,7 @@
             const firstPart = ipParts[0];
             const secondPart = ipParts[1];
 
-            if (firstPart === "140" || (firstPart === "61" && secondPart)) {
+            if (firstPart === "140" || firstPart === "61") {
                 document.getElementById("errorSection").innerText = "請開啟行動網路再行簽到";
                 document.getElementById("errorSection").style.display = "block";
                 document.getElementById("locationForm").style.display = "none";
@@ -156,7 +156,7 @@
             const lastSubmissionDate = localStorage.getItem('lastSubmissionDate');
 
             if (lastSubmissionIP === ipAddress && lastSubmissionDate === today) {
-                alert("此 IP 今日已提交過表單，請明日再試。");
+                alert("此 IP 今日已提交過表單。");
                 return;
             }
 
