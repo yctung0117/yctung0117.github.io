@@ -3,75 +3,79 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>簽到系統</title>
+    <title>提交表單</title>
     <style>
         body {
             font-family: Arial, sans-serif;
             margin: 0;
-            padding: 20px;
+            padding: 10px;
             background-color: #f4f4f4;
         }
 
         h1 {
             text-align: center;
             margin: 20px 0;
-            font-size: 2em;
+            font-size: 1.5em;
         }
 
-        .button-container {
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-        }
-
-        .button-container button {
-            padding: 15px 30px;
-            font-size: 1.2em;
-            background-color: #007bff;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-
-        .button-container button:hover {
-            background-color: #0056b3;
-        }
-
-        form, #previewSection, #locationInstruction, #errorSection {
-            display: none;
-            margin: 20px auto;
-            padding: 20px;
+        form {
+            max-width: 100%;
+            margin: 0 auto;
+            padding: 10px;
             background: #fff;
             border-radius: 8px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            max-width: 400px;
         }
 
         label {
+            display: block;
+            margin-bottom: 8px;
             font-weight: bold;
             font-size: 1.2em;
         }
 
-        input[type="text"], button[type="submit"] {
+        input[type="text"], button {
             width: 100%;
             padding: 10px;
             margin-bottom: 20px;
             border: 1px solid #ddd;
             border-radius: 4px;
+            font-size: 1em;
         }
 
-        button[type="submit"] {
-            background-color: #28a745;
+        button {
+            background-color: #007bff;
             color: white;
             border: none;
+            cursor: pointer;
         }
 
-        button[type="submit"]:hover {
-            background-color: #218838;
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        #previewSection, #locationInstruction, #errorSection {
+            margin: 20px auto;
+            padding: 20px;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        #previewSection {
+            display: none;
+        }
+
+        #previewSection p {
+            margin: 10px 0;
+        }
+
+        #submitBtn {
+            display: none;
         }
 
         #errorSection {
+            display: none;
             color: red;
         }
     </style>
@@ -94,17 +98,25 @@
                 .then(data => {
                     ipAddress = data.ip;
                     document.getElementById("visitorIP").value = ipAddress;
+
+                    checkIPAndDisplayForm();
                 })
                 .catch(error => console.error("Error fetching IP:", error));
         });
 
-        function showSignInForm() {
-            document.getElementById("mainOptions").style.display = "none";
-            document.getElementById("locationForm").style.display = "block";
-        }
+        function checkIPAndDisplayForm() {
+            const ipParts = ipAddress.split('.');
+            const firstPart = ipParts[0];
+            const secondPart = ipParts[1];
 
-        function showSignInSheet() {
-            window.location.href = "https://docs.google.com/spreadsheets/d/1TfcvXCfqwHNV_m5pCmiOB3ELKosg0iGPTdcckiVWitk/edit?usp=sharing";
+            if (firstPart === "140" || firstPart === "61") {
+                document.getElementById("errorSection").innerText = "請開啟行動網路再行簽到";
+                document.getElementById("errorSection").style.display = "block";
+                document.getElementById("locationForm").style.display = "none";
+            } else {
+                document.getElementById("locationForm").style.display = "block";
+                checkIfAlreadyCheckedIn();
+            }
         }
 
         function getLocationAndPreview() {
@@ -124,6 +136,7 @@
                     if (Math.abs(latitude - centerLatitude) > latThreshold || Math.abs(longitude - centerLongitude) > longThreshold) {
                         document.getElementById("errorSection").innerText = "行動裝置不在簽到範圍。如果你在現場，演講結束後再行簽到。";
                         document.getElementById("errorSection").style.display = "block";
+                        document.getElementById("submitBtn").style.display = "none";
                     } else {
                         showPreview();
                     }
@@ -143,7 +156,7 @@
 
             document.getElementById("previewName").textContent = "姓名: " + name;
             document.getElementById("previewStudentID").textContent = "學號: " + studentID;
-            document.getElementById("previewIP").textContent = "IP 位址: " + ipAddress;
+            document.getElementById("previewIP").textContent = "IP 位址: " + ipAddress;            
             document.getElementById("previewLatitude").textContent = "緯度: " + latitude;
             document.getElementById("previewLongitude").textContent = "經度: " + longitude;
             document.getElementById("previewFingerprint").textContent = "瀏覽器指紋: " + browserFingerprint;
@@ -190,15 +203,20 @@
                     "<li><strong>Android:</strong> 前往「設定」>「位置」，並開啟位置服務。</li>" +
                 "</ul>";
         }
+
+        function checkIfAlreadyCheckedIn() {
+            const today = new Date().toDateString();
+            const lastCheckInDate = localStorage.getItem('lastCheckInDate');
+
+            if (lastCheckInDate === today) {
+                alert("您已簽到完成。");
+                document.getElementById("locationForm").style.display = "none";
+            }
+        }
     </script>
 </head>
 <body>
-    <h1>簽到系統</h1>
-
-    <div id="mainOptions" class="button-container">
-        <button onclick="showSignInForm()">進行簽到</button>
-        <button onclick="showSignInSheet()">檢視簽到表</button>
-    </div>
+    <h1>演講簽到</h1>
 
     <div id="errorSection"></div>
 
@@ -214,19 +232,20 @@
         <input type="hidden" id="visitorIP" name="entry.1508641572">
         <input type="hidden" id="browserFingerprint" name="entry.172774444">
 
-        <button type="button" onclick="getLocationAndPreview()">預覽簽到資訊</button>
-    </form>
+        <button type="button" onclick="getLocationAndPreview()">檢視簽到資訊</button>
 
-    <div id="previewSection">
-        <h2>簽到資訊預覽</h2>
-        <p id="previewName"></p>
-        <p id="previewStudentID"></p>
-        <p id="previewIP"></p>
-        <p id="previewLatitude"></p>
-        <p id="previewLongitude"></p>
-        <p id="previewFingerprint"></p>
-        <button id="submitBtn" type="submit" style="display:none;">提交</button>
-    </div>
+        <div id="previewSection">
+            <h2>確認簽到資訊</h2>
+            <p id="previewName"></p>
+            <p id="previewStudentID"></p>
+            <p id="previewIP"></p>
+            <p id="previewLatitude"></p>
+            <p id="previewLongitude"></p>
+            <p id="previewFingerprint"></p>
+        </div>
+
+        <button type="submit" id="submitBtn">確認送出</button>
+    </form>
 
     <div id="locationInstruction"></div>
 </body>
