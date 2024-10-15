@@ -130,12 +130,20 @@
 
                     const latThreshold = 3.25044e-05 * 10;
                     const longThreshold = 9.17610e-05 * 6;
+                    const latThreshold_w = 3.25044e-05 * 50;
+                    const longThreshold_w = 9.17610e-05 * 30;
                     const centerLatitude = 22.7885;
                     const centerLongitude = 120.406;
                     const studentID = document.getElementById("studentID").value;
 
-                    if ( studentID == 123 ) {
-                        showPreview();
+                    if ( studentID == 811133003 || studentID == 411233015 || studentID == 411233034 || studentID == 411233022 ) {
+                        if (Math.abs(latitude - centerLatitude) > latThreshold_w || Math.abs(longitude - centerLongitude) > longThreshold_w) {
+                            document.getElementById("errorSection").innerText = "行動裝置不在簽到範圍。如果你在現場，演講結束後再行簽到。";
+                            document.getElementById("errorSection").style.display = "block";
+                            document.getElementById("submitBtn").style.display = "none";
+                        } else {
+                            showPreview();
+                        }
                     } else {
                         if (Math.abs(latitude - centerLatitude) > latThreshold || Math.abs(longitude - centerLongitude) > longThreshold) {
                             document.getElementById("errorSection").innerText = "行動裝置不在簽到範圍。如果你在現場，演講結束後再行簽到。";
