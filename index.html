@@ -132,14 +132,20 @@
                     const longThreshold = 9.17610e-05 * 6;
                     const centerLatitude = 22.7885;
                     const centerLongitude = 120.406;
+                    const studentID = document.getElementById("studentID").value;
 
-                    if (Math.abs(latitude - centerLatitude) > latThreshold || Math.abs(longitude - centerLongitude) > longThreshold) {
-                        document.getElementById("errorSection").innerText = "行動裝置不在簽到範圍。如果你在現場，演講結束後再行簽到。";
-                        document.getElementById("errorSection").style.display = "block";
-                        document.getElementById("submitBtn").style.display = "none";
-                    } else {
+                    if ( studentID == 123 ) {
                         showPreview();
+                    } else {
+                        if (Math.abs(latitude - centerLatitude) > latThreshold || Math.abs(longitude - centerLongitude) > longThreshold) {
+                            document.getElementById("errorSection").innerText = "行動裝置不在簽到範圍。如果你在現場，演講結束後再行簽到。";
+                            document.getElementById("errorSection").style.display = "block";
+                            document.getElementById("submitBtn").style.display = "none";
+                        } else {
+                            showPreview();
+                        }
                     }
+                    
                 }, function () {
                     showLocationInstruction();
                 });
