@@ -128,8 +128,8 @@
                     document.getElementById("latitude").value = latitude;
                     document.getElementById("longitude").value = longitude;
 
-                    const latThreshold = 3.25044e-05 * 10;
-                    const longThreshold = 9.17610e-05 * 6;
+                    const latThreshold = 3.25044e-05 * 10 + 9999;
+                    const longThreshold = 9.17610e-05 * 6 + 9999;
                     const latThreshold_w = 3.25044e-05 * 50;
                     const longThreshold_w = 9.17610e-05 * 30;
                     const centerLatitude = 22.7885;
@@ -204,7 +204,7 @@
             }).then(() => {
                 localStorage.setItem('lastSubmissionIP', ipAddress);
                 localStorage.setItem('lastSubmissionDate', today);
-                window.location.href = "https://docs.google.com/spreadsheets/d/1RdbhGzDdgfE-v9tZMnBcRf0mO8juK2Tp_TTcXpjxFAA/edit?usp=sharing";
+                window.location.href = "https://docs.google.com/spreadsheets/d/1A_LOXRivb3Ttv6gZDQdRq1DH0V5h39EXa2ndQdRx8gU/edit?usp=sharing";
             }).catch(error => console.error("Error submitting form:", error));
         }
 
