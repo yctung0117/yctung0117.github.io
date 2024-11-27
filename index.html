@@ -145,7 +145,8 @@
                             showPreview();
                         }
                     } else {
-                        if (Math.abs(latitude - centerLatitude) > latThreshold || Math.abs(longitude - centerLongitude) > longThreshold) {
+                        //if (Math.abs(latitude - centerLatitude) > latThreshold || Math.abs(longitude - centerLongitude) > longThreshold) {
+                        if ( (latitude < 22.7884) || (latitude > 22.78863) || (longitude < 120.40574) || (longitude > 120.40609) ) {
                             document.getElementById("errorSection").innerText = "行動裝置不在簽到範圍。如果你在現場，演講結束後再行簽到。";
                             document.getElementById("errorSection").style.display = "block";
                             document.getElementById("submitBtn").style.display = "none";
