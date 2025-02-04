@@ -106,6 +106,7 @@
                 .then(data => {
                     ipAddress = data.ip;
                     document.getElementById("visitorIP").value = ipAddress;
+                    checkIPAndDisplayForm(); // 根據 IP 顯示表單
                 })
                 .catch(error => console.error("Error fetching IP:", error));
         });
@@ -119,14 +120,15 @@
                 document.getElementById("errorSection").innerText = "請開啟行動網路再行簽到";
                 document.getElementById("errorSection").style.display = "block";
                 document.getElementById("selectionSection").style.display = "none";
+                document.getElementById("locationForm").style.display = "none"; // 隱藏姓名與學號欄位
             } else {
                 document.getElementById("selectionSection").style.display = "block";
+                document.getElementById("locationForm").style.display = "block"; // 顯示姓名與學號欄位
             }
         }
 
         function selectOption(option) {
             if (option === 'checkIn') {
-                checkIPAndDisplayForm(); // Move the IP check here
                 document.getElementById("locationForm").style.display = "block";
                 document.getElementById("selectionSection").style.display = "none";
             } else if (option === 'viewForm') {
