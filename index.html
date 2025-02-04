@@ -106,8 +106,6 @@
                 .then(data => {
                     ipAddress = data.ip;
                     document.getElementById("visitorIP").value = ipAddress;
-
-                    checkIPAndDisplayForm();
                 })
                 .catch(error => console.error("Error fetching IP:", error));
         });
@@ -128,6 +126,7 @@
 
         function selectOption(option) {
             if (option === 'checkIn') {
+                checkIPAndDisplayForm(); // Move the IP check here
                 document.getElementById("locationForm").style.display = "block";
                 document.getElementById("selectionSection").style.display = "none";
             } else if (option === 'viewForm') {
