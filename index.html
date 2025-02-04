@@ -123,13 +123,13 @@
                 document.getElementById("locationForm").style.display = "none"; // 隱藏姓名與學號欄位
             } else {
                 document.getElementById("selectionSection").style.display = "block";
-                document.getElementById("locationForm").style.display = "block"; // 顯示姓名與學號欄位
+                document.getElementById("locationForm").style.display = "none"; // 隱藏姓名與學號欄位
             }
         }
 
         function selectOption(option) {
             if (option === 'checkIn') {
-                document.getElementById("locationForm").style.display = "block";
+                document.getElementById("locationForm").style.display = "block"; // 顯示姓名與學號欄位
                 document.getElementById("selectionSection").style.display = "none";
             } else if (option === 'viewForm') {
                 window.location.href = "https://docs.google.com/spreadsheets/d/1MaBpEv05va72iYts76ybcWNK65KjBr3PmH2Qf3zzpnw/edit?usp=sharing";
