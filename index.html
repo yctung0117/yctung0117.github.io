@@ -136,24 +136,16 @@
                     const centerLongitude = 120.406;
                     const studentID = document.getElementById("studentID").value;
 
-                    if ( studentID == 811133003 || studentID == 411233015 || studentID == 411233034 || studentID == 411233022 ) {
-                        if (Math.abs(latitude - centerLatitude) > latThreshold_w || Math.abs(longitude - centerLongitude) > longThreshold_w) {
-                            document.getElementById("errorSection").innerText = "行動裝置不在簽到範圍。如果你在現場，演講結束後再行簽到。";
-                            document.getElementById("errorSection").style.display = "block";
-                            document.getElementById("submitBtn").style.display = "none";
-                        } else {
-                            showPreview();
-                        }
-                    } else {
-                        //if (Math.abs(latitude - centerLatitude) > latThreshold || Math.abs(longitude - centerLongitude) > longThreshold) {
-                        if ( (latitude < 22.7884) || (latitude > 22.78863) || (longitude < 120.40574) || (longitude > 120.40609) ) {
-                            document.getElementById("errorSection").innerText = "行動裝置不在簽到範圍。如果你在現場，演講結束後再行簽到。";
-                            document.getElementById("errorSection").style.display = "block";
-                            document.getElementById("submitBtn").style.display = "none";
-                        } else {
-                            showPreview();
-                        }
-                    }
+
+                //if (Math.abs(latitude - centerLatitude) > latThreshold || Math.abs(longitude - centerLongitude) > longThreshold) {
+                if ( !((latitude < 22.7884) || (latitude > 22.78863) || (longitude < 120.40574) || (longitude > 120.40609)) ) {
+                    document.getElementById("errorSection").innerText = "行動裝置不在簽到範圍。如果你在現場，演講結束後再行簽到。";
+                    document.getElementById("errorSection").style.display = "block";
+                    document.getElementById("submitBtn").style.display = "none";
+                } else {
+                    showPreview();
+                }
+
                     
                 }, function () {
                     showLocationInstruction();
