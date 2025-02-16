@@ -1,6 +1,11 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
 <head>
+
+    <script>
+        const googleSheetURL = "https://docs.google.com/spreadsheets/d/1QedTknk7LTItFVuK04o4gk-p4K7IvRFISbdC5s9H3_s/edit?usp=sharing";
+        console.log("Google 試算表 URL:", googleSheetURL);
+    </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>提交表單</title>
@@ -166,7 +171,7 @@
                 document.getElementById("locationForm").style.display = "block"; // 顯示姓名與學號欄位
                 document.getElementById("selectionSection").style.display = "none";
             } else if (option === 'viewForm') {
-                window.location.href = "https://docs.google.com/spreadsheets/d/1QedTknk7LTItFVuK04o4gk-p4K7IvRFISbdC5s9H3_s/edit?usp=sharing";
+                window.location.href = googleSheetURL;
             }
         }
 
@@ -244,7 +249,7 @@
             }).then(() => {
                 localStorage.setItem('lastSubmissionIP', ipAddress);
                 localStorage.setItem('lastSubmissionDate', today);
-                window.location.href = "https://docs.google.com/spreadsheets/d/1QedTknk7LTItFVuK04o4gk-p4K7IvRFISbdC5s9H3_s/edit?usp=sharing";
+                window.location.href = googleSheetURL;
             }).catch(error => console.error("Error submitting form:", error));
         }
 
