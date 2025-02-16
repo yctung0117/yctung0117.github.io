@@ -150,18 +150,6 @@
                 .catch(error => console.error("Error fetching IP:", error));
         });
 
-        function isGoogleFormOpen() {
-            return fetch("https://docs.google.com/forms/d/e/1FAIpQLScxzZc0GVmTzP_2AYj81A9RwTI8mDdy4QIzH8TpBcPOvIwm6w/viewform")
-                .then(response => response.text()) // 取得 HTML 原始碼
-                .then(html => {
-                    // 檢查是否包含 `<form>` 標籤（表單開放）
-                    return html.includes("<form ");
-                })
-                .catch(error => {
-                    console.error("無法檢查表單狀態:", error);
-                r    eturn false; // 無法取得網頁時，假設表單關閉
-                });
-        }
         
         function checkIPAndDisplayForm() {
             const ipParts = ipAddress.split('.');
