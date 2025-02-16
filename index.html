@@ -150,6 +150,19 @@
                 .catch(error => console.error("Error fetching IP:", error));
         });
 
+        function isGoogleFormOpen() {
+            return fetch("https://docs.google.com/forms/d/e/1FAIpQLScxzZc0GVmTzP_2AYj81A9RwTI8mDdy4QIzH8TpBcPOvIwm6w/viewform")
+                .then(response => response.text()) // 取得 HTML 原始碼
+                .then(html => {
+                    // 檢查是否包含 `<form>` 標籤（表單開放）
+                    return html.includes("<form ");
+                })
+                .catch(error => {
+                    console.error("無法檢查表單狀態:", error);
+                r    eturn false; // 無法取得網頁時，假設表單關閉
+                });
+        }
+        
         function checkIPAndDisplayForm() {
             const ipParts = ipAddress.split('.');
             const firstPart = ipParts[0];
@@ -225,6 +238,13 @@
         }
 
         function submitForm() {
+
+            isGoogleFormOpen().then(isOpen => {
+            if (!isOpen) {
+                alert("尚未開放簽到，請稍後再試！");
+                return;
+            }
+
             const today = new Date().toDateString();
             const lastSubmissionIP = localStorage.getItem('lastSubmissionIP');
             const lastSubmissionDate = localStorage.getItem('lastSubmissionDate');
@@ -251,6 +271,35 @@
                 localStorage.setItem('lastSubmissionDate', today);
                 window.location.href = googleSheetURL;
             }).catch(error => console.error("Error submitting form:", error));
+        });
+            <!--
+            const today = new Date().toDateString();
+            const lastSubmissionIP = localStorage.getItem('lastSubmissionIP');
+            const lastSubmissionDate = localStorage.getItem('lastSubmissionDate');
+
+            if (lastSubmissionIP === ipAddress && lastSubmissionDate === today) {
+                alert("此裝置已提交過表單。");
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append("entry.1299380552", document.getElementById("name").value);
+            formData.append("entry.35946792", document.getElementById("studentID").value);
+            formData.append("entry.1497304119", document.getElementById("latitude").value);
+            formData.append("entry.417639613", document.getElementById("longitude").value);
+            formData.append("entry.1508641572", document.getElementById("visitorIP").value);
+            formData.append("entry.172774444", document.getElementById("browserFingerprint").value);
+
+            fetch("https://docs.google.com/forms/d/e/1FAIpQLScxzZc0GVmTzP_2AYj81A9RwTI8mDdy4QIzH8TpBcPOvIwm6w/formResponse", {
+                method: "POST",
+                body: formData,
+                mode: "no-cors"
+            }).then(() => {
+                localStorage.setItem('lastSubmissionIP', ipAddress);
+                localStorage.setItem('lastSubmissionDate', today);
+                window.location.href = googleSheetURL;
+            }).catch(error => console.error("Error submitting form:", error));
+            -->
         }
 
         function showLocationInstruction() {
